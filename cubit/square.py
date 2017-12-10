@@ -146,7 +146,13 @@ def burnside_8pt():
     Burnside, W., "An approximate quadrature formula", Messenger of Math.,
     v. 37, 1908, pp. 166-167
     '''
-    pass
+    x_nodes = np.array([sqrt(7/15), sqrt(7/9), 0, -sqrt(7/9),
+                        -sqrt(7/15), -sqrt(7/9), 0, sqrt(7/9)])
+    y_nodes = np.array([0, sqrt(7/9), sqrt(7/15), sqrt(7/9),
+                        0, -sqrt(7/9), -sqrt(7/15), -sqrt(7/9)])
+    weights = np.array([10/49, 9/196, 10/49, 9/196,
+                        10/49, 9/196, 10/49, 9/196])
+    return (x_nodes, y_nodes), weights
 
 def tyler_13pt():
     '''
@@ -198,7 +204,19 @@ def tyler_12pt():
     Tyler, G. W., "Numerical integration of functions of several variables",
     Canad. J. Math., v. 5, 1953, pp. 393-412.
     '''
-    pass
+    r = sqrt(6/7)
+    s = sqrt((114-3*sqrt(583))/287)
+    t = sqrt((114+3*sqrt(583))/287)
+    B1 = 49/810
+    B2 = (178981+2769*sqrt(583))/1888920
+    B3 = (178981-2769*sqrt(583))/1888920
+    x_nodes = np.array([ r,  s,  t, 0, -s, -t,
+                        -r, -s, -t, 0,  s,  t])
+    y_nodes = np.array([0,  s,  t,  r,  s,  t,
+                        0, -s, -t, -r, -s, -t])
+    weights = np.array([B1, B2, B3, B1, B2, B3,
+                        B1, B2, B3, B1, B2, B3])
+    return (x_nodes, y_nodes), weights
 
 def mysovskikh_12pt():
     '''
