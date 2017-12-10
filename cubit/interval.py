@@ -122,7 +122,7 @@ def newton_cotes(m, n, lower=-1, upper=1):
     These are the composite rules using n equally-spaced points in each
     subinterval. The order of a rule of this type is n-1 if n is even or
     n if n is odd. Rules with odd numbers of points gain an order because
-    their points are equally distributed within each subinterval.
+    their points are symmetrically distributed within each subinterval.
     High-order rules of this type can suffer from Runge's phenomenon.
     The total number of evaluation points is (n-1)*m + 1.
     '''
