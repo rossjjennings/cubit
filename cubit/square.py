@@ -295,7 +295,22 @@ def mysovskikh_12pt():
     Phillips, G. M., "Numerical integration in two and three dimensions",
     Computer J., v. 10, 1967, pp. 202-204.
     '''
-    pass
+    r = sqrt((105 + 3*sqrt(385))/140)
+    s = sqrt((105 - 3*sqrt(385))/140)
+    t = sqrt(3/5)
+    B1 = (77 - 3*sqrt(385))/891
+    B2 = (77 + 3*sqrt(385))/891
+    B3 = 25/324
+    
+    x_nodes = np.array([ r,  s,  t,  0,  0, -t,
+                        -r, -s, -t,  0,  0,  t])
+    y_nodes = np.array([ 0,  0,  t,  r,  s,  t,
+                         0,  0, -t, -r, -s, -t])
+    weights = np.array([B1, B2, B3, B1, B2, B3,
+                        B1, B2, B3, B1, B2, B3])
+    weights *= 4
+    
+    return (x_nodes, y_nodes), weights
 
 def maxwell_13pt():
     '''
@@ -309,18 +324,45 @@ def maxwell_13pt():
     Maxwell, J. Clerk, "On approximate multiple integration between limits
     of summation", Proc. Cambridge Philos. Soc., v. 3, 1877, pp. 39-47.
     '''
-    pass
-
-def tyler_12pt2():
-    '''
-    Tyler's second twelve-point rule (Stroud C2: 7-5):
+    r = sqrt(12/35)
+    s = sqrt((93 + 3*sqrt(186))/155)
+    t = sqrt((93 - 3*sqrt(186))/155)
     
-    A seventh-order rule with twelve points. Four points have negative weight.
+    x_nodes = np.array([0,  r,  s,  t,  0, -t, -s,
+                           -r, -s, -t,  0,  t,  s])
+    y_nodes = np.array([0,  0,  t,  s, -r, -s, -t,
+                            0, -t, -s, -r, -s, -t])
+    weights = np.array([1/81, 49/324, 31/649, 31/649, 49/324, 31/649, 31/649,
+                              49/324, 31/649, 31/649, 49/324, 31/649, 31/649])
+    weights *= 4
+    
+    return (x_nodes, y_nodes), weights
+
+def tyler_21pt():
+    '''
+    Tyler's 21-point rule (Stroud C2: 7-5):
+    
+    A seventh-order rule with 21 points. Four points have negative weight.
+    The formula is incorrectly listed as having 12 points in Stroud.
     
     Tyler, G. W., "Numerical integration of functions of several variables",
     Canad. J. Math., v. 5, 1953, pp. 393-412.
     '''
-    pass
+    x_nodes = np.array([0,  1,  2/3,  1/3,  1,  1/2,
+                            0,    0,    0, -1, -1/2,
+                           -1, -2/3, -1/3, -1, -1/2,
+                            0,    0,    0,  1,  1/2])
+    y_nodes = np.array([0,  0,    0,    0,  1,  1/2,
+                            1,  2/3,  1/3,  1,  1/2,
+                            0,    0,    0, -1, -1/2,
+                           -1, -2/3, -1/3, -1, -1/2])
+    weights = np.array([449/315, 37/1260, 3/28, -69/140, 7/540, 32/135,
+                                 37/1260, 3/28, -69/140, 7/540, 32/135,
+                                 37/1260, 3/28, -69/140, 7/540, 32/135,
+                                 37/1260, 3/28, -69/140, 7/540, 32/135])
+    weights *= 4
+    
+    return (x_nodes, y_nodes), weights
 
 def meister_25pt():
     '''
@@ -331,7 +373,21 @@ def meister_25pt():
     Meister, Bernd, "On a family of cubature formulae",
     Computer J., v. 8, 1966, pp. 368-371.
     '''
-    pass
+    x_nodes = np.array([   0,  2/3,    1,  1,  2/3,  1/3,  1/3,
+                                 0, -1/3, -1, -2/3, -1/3,   -1,
+                              -2/3,   -1, -1, -2/3, -1/3, -1/3,
+                                 0,  1/3,  1   2/3,  1/3,  1/3])
+    y_nodes = np.array([   0,    0,  1/3,  1,  2/3,  1/3,    1,
+                               2/3,    1,  1,  2/3,  1/3,  1/3,
+                                 0, -1/3, -1, -2/3, -1/3,   -1,
+                              -2/3,   -1, -1, -2/3, -1/3, -1/3])
+    weights = np.array([1024,  576,  117, 47,  576,   -9,  117,
+                               576,  117, 47,  576,   -9,  117,
+                               576,  117, 47,  576,   -9,  117,
+                               576,  117, 47,  576,   -9,  117])
+    weights *= 4/6720
+    
+    return (x_nodes, y_nodes), weights
 
 def rr_20pt():
     '''
