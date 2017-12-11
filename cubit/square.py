@@ -1,4 +1,5 @@
 import numpy as np
+from numpy import pi, sin, cos, exp, log, sqrt
 from cubit import interval
 
 def prod_trapz(m1, m2):
@@ -76,7 +77,26 @@ def ewing_quincunx(m1, m2):
     Ewing, G. M., "On approximate cubature",
     Amer. Math. Monthly, v. 4, 1941, pp. 134-136.
     '''
-    pass
+    longrow = np.linspace(-1, 1, m1 + 1)
+    shortrow = np.linspace(-1 + 1/m1, 1 - 1/m1, m1)
+    nodes_x = np.empty((m1 + 1)*(m2 + 1) + m1*m2)
+    nodes_y = np.empty((m1 + 1)*(m2 + 1) + m1*m2)
+    weights = np.empty((m1 + 1)*(m2 + 1) + m1*m2)
+    for i in range(m2):
+        nodes_x[(2*m1 + 1)*i : (2*m1 + 1)*i + m1 + 1] = longrow
+        nodes_y[(2*m1 + 1)*i : (2*m1 + 1)*i + m1 + 1] = longrow[i]
+        weights[(2*m1 + 1)*i] = weights[(2*m1 + 1)*i + m1] = 1/6
+        weights[(2*m1 + 1)*i + 1 : (2*m1 + 1)*i + m1] = 1/3
+        nodes_x[(2*m1 + 1)*i + m1 + 1 : (2*m1 + 1)*(i + 1)] = shortrow
+        nodes_y[(2*m1 + 1)*i + m1 + 1 : (2*m1 + 1)*(i + 1)] = shortrow[i]
+        weights[(2*m1 + 1)*i + m1 + 1 : (2*m1 + 1)*(i + 1)] = 2/3
+    weights[0 : m1 + 1] *= 1/2
+    nodes_x[(2*m1 + 1)*m2:] = longrow
+    nodes_y[(2*m1 + 1)*m2:] = longrow[-1]
+    weights[(2*m1 + 1)*m2] = weights[-1] = 1/12
+    weights[(2*m1 + 1)*m2 + 1 : -1] = 1/6
+    weights *= 4/(m1*m2)
+    return (nodes_x, nodes_y), weights
 
 def ac_9pt(m1, m2):
     '''
@@ -119,19 +139,33 @@ def radon_7pt():
     Radon, J., "Zur mechaniste Kubatur",
     Monatsh. Math., v. 52, 1948, pp. 286-300.
     '''
-    pass
+    r = sqrt(3/5)
+    s = sqrt(1/3)
+    t = sqrt(14/15)
+    x_nodes = np.array([0, r, 0, -r, -r,  0,  r]) 
+    y_nodes = np.array([0, s, t,  s, -s, -t, -s])
+    weights = np.array([2/7, 5/36, 5/63, 5/36, 5/36, 5/63, 5/36])
+    weights *= 4
+    return (x_nodes, y_nodes), weights
 
 def ac_7pt():
     '''
     Albrecht-Collatz seven-point rule (Stroud C2: 5-2):
     
     A fifth-order fule with seven points. The points are distributed
-    symmetrically with respect to the diagonals.
+    symmetrically with respect to the diagonal.
     
     Albrecht, J. and Collatz, L., "Zur numerischen auswertung mehrdimensionaler
     Integrale", Z. Agnew. Math. Mech., v. 38, 1958, pp. 1-15.
     '''
-    pass
+    r = sqrt(7/15)
+    s = sqrt((7+sqrt(24))/15)
+    t = sqrt((7-sqrt(24))/15)
+    x_nodes = np.array([0, r, -t, -s, -r,  s,  t])
+    y_nodes = np.array([0, r,  s,  t, -r, -t, -s])
+    weights = np.array([2/7, 25/168, 5/48, 5/48, 25/168, 5/48, 5/48])
+    weights *= 4
+    return (x_nodes, y_nodes), weights
 
 def burnside_8pt():
     '''
@@ -152,6 +186,7 @@ def burnside_8pt():
                         0, -sqrt(7/9), -sqrt(7/15), -sqrt(7/9)])
     weights = np.array([10/49, 9/196, 10/49, 9/196,
                         10/49, 9/196, 10/49, 9/196])
+    weights *= 4
     return (x_nodes, y_nodes), weights
 
 def tyler_13pt():
@@ -166,7 +201,14 @@ def tyler_13pt():
     Tyler, G. W., "Numerical integration of functions of several variables",
     Canad. J. Math., v. 5, 1953, pp. 393-412.
     '''
-    pass
+    x_nodes = np.array([0, 0.5,  1,  1,    0,  0, -1,
+                          -0.5, -1, -1,    0,  0,  1])
+    y_nodes = np.array([0,   0,  0,  1,  0.5,  1,  1,
+                             0,  0, -1, -0.5, -1, -1])
+    weights = np.array([-28/45, 16/45, 1/45, 1/36, 16/45, 1/45, 1/36,
+                                16/45, 1/45, 1/36, 16/45, 1/45, 1/36])
+    weights *= 4
+    return (x_nodes, y_nodes), weights
 
 def meister_13pt():
     '''
@@ -178,7 +220,14 @@ def meister_13pt():
     Meister, Bernd, "On a family of cubature formulae",
     Computer J., v. 8, 1966, pp. 368-371.
     '''
-    pass
+    x_nodes = np.array([0, 1,  0.5,  1,  0, -0.5, -1,
+                          -1, -0.5, -1,  0,  0.5,  1])
+    y_nodes = np.array([0, 0,  0.5,  1,  1,  0.5,  1,
+                           0, -0.5, -1, -1, -0.5, -1])
+    weights = np.array([2/45, 2/45, 8/45, 1/60, 2/45, 8/45, 1/60,
+                              2/45, 8/45, 1/60, 2/45, 8/45, 1/60])
+    weights *= 4
+    return (x_nodes, y_nodes), weights
 
 def irwin_24pt():
     '''
@@ -190,7 +239,20 @@ def irwin_24pt():
     Irwin, J. O., "On quadrature and cubature",
     Tracts for Computers, No. 10, 1923.
     '''
-    pass
+    x_nodes = np.array([ 5,  3,  1,  3,  1,  1,
+                        -1, -1, -1, -3, -3, -5,
+                        -5, -3, -1, -3, -1, -1,
+                         1,  1,  1,  3,  3,  5])
+    y_nodes = np.array([ 1,  1,  1,  3,  3,  5,
+                         5,  3,  1,  3,  1,  1,
+                        -1, -1, -1, -3, -3, -5,
+                        -5, -3, -1, -3, -1, -1])
+    weights = np.array([11/2880, -98/2880, 889/2880, 5/2880, -98/2880, 11/2880,
+                        11/2880, -98/2880, 889/2880, 5/2880, -98/2880, 11/2880,
+                        11/2880, -98/2880, 889/2880, 5/2880, -98/2880, 11/2880,
+                        11/2880, -98/2880, 889/2880, 5/2880, -98/2880, 11/2880])
+    weights *= 4
+    return (x_nodes, y_nodes), weights
 
 def tyler_12pt():
     '''
