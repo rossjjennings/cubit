@@ -399,29 +399,138 @@ def rr_20pt():
     integration formulas with minimal numbers of points", Math. Comput.,
     v. 23, 1969, pp. 765-779.
     '''
-    pass
+    r1 = 0.9845398119422523
+    r2 = 0.4888863428423724
+    r3 = 0.9395672874215217
+    r4 = 0.8367103250239890
+    s4 = 0.5073767736746132
+    B1 = 0.0716134247098111
+    B2 = 0.4540903525515453
+    B3 = 0.0427846154667780
+    B4 = 0.2157558036359238
+    
+    x_nodes = np.array([ r1,  r2,  r4,  r3,  s4,   0,   0, -s4, -r3, -r4,
+                        -r1, -r2, -r4, -r3, -s4,   0,   0,  s4,  r3,  r4])
+    y_nodes = np.array([  0,   0,  s4,  r3,  r4,  r1,  r2,  r4,  r3,  s4,
+                          0,   0, -s4, -r3, -r4, -r1, -r2, -r4, -r3, -s4])
+    weights = np.array([ B1,  B2,  B4,  B3,  B4,  B1,  B2,  B4,  B3,  B4,
+                         B1,  B2,  B4,  B3,  B4,  B1,  B2,  B4,  B3,  B4])
+    
+    return (x_nodes, y_nodes), weights
 
 def chanut_21pt():
     '''
-    Chanut's 21-point rule (Stroud C2: 9-2):
+    Chanut's first 21-point rule (Stroud C2: 9-2):
     
     A ninth-order rule with 21 points.
     
     Chanut, A., "Calcul numérique des integrales doubles",
     C. R. Acad. Sci. Paris, v. 256, 1963, pp. 3239-3241.
     '''
-    pass
+    r = 0.9490600754
+    s = 0.7012653741
+    t = 0.4889268570
+    u = 0.8539562957
+    v = 0.07689419029
+    B0 = 0.5264789704
+    B1 = 0.0988411238
+    B2 = 0.1383642832
+    B3 = 0.3943019434
+    
+    x_nodes = np.array([ 0,  u,  r,  t,  s,  v, -v, -s, -t, -r, -u,
+                            -u, -r, -t, -s, -v,  v,  s,  t,  r,  u])
+    y_nodes = np.array([ 0,  v,  s,  t,  r,  u,  u,  r,  t,  s,  v,
+                            -v, -s, -t, -r, -u, -u, -r, -t, -s, -v])
+    weights = np.array([B0, B2, B1, B3, B1, B2, B2, B1, B3, B1, B2,
+                            B2, B1, B3, B1, B2, B2, B1, B3, B1, B2])
+    
+    return (x_nodes, y_nodes), weights
+
+def chanut_21pt2():
+    '''
+    Chanut's second 21-point rule (Stroud C2: 9-2):
+    
+    A ninth-order rule with 21 points.
+    
+    Chanut, A., "Calcul numérique des integrales doubles",
+    C. R. Acad. Sci. Paris, v. 256, 1963, pp. 3239-3241.
+    '''
+    r = 0.9648021210
+    s = 0.3480000007
+    t = 0.8536348540
+    u = 0.6564038459
+    v = 0.3017236686
+    B0 = 0.5267489720
+    B1 = 0.08574340975
+    B2 = 0.2828874118
+    B3 = 0.1310511139
+    
+    x_nodes = np.array([ 0,  u,  r,  t,  s,  v, -v, -s, -t, -r, -u,
+                            -u, -r, -t, -s, -v,  v,  s,  t,  r,  u])
+    y_nodes = np.array([ 0,  v,  s,  t,  r,  u,  u,  r,  t,  s,  v,
+                            -v, -s, -t, -r, -u, -u, -r, -t, -s, -v])
+    weights = np.array([B0, B2, B1, B3, B1, B2, B2, B1, B3, B1, B2,
+                            B2, B1, B3, B1, B2, B2, B1, B3, B1, B2])
+    
+    return (x_nodes, y_nodes), weights
 
 def chanut_25pt():
     '''
-    Chanut's 25-point rule (Stroud C2: 9-3):
+    Chanut's first 25-point rule (Stroud C2: 9-3):
     
     A ninth-order rule with 25 points.
     
     Chanut, A., "Calcul numérique des integrales doubles",
     C. R. Acad. Sci. Paris, v. 256, 1963, pp. 3239-3241.
     '''
-    pass
+    r = 0.9446995561
+    s = 0.7128121207
+    t = 0.5992626637
+    u = 0.8880649884
+    v = 0.1204163075
+    w = 0.3703646943
+    B0 = 0.5267489673
+    B1 = 0.09443701609
+    B2 = 0.1058119207
+    B3 = 0.2339074423
+    
+    x_nodes = array([ 0,  r,  u,  t,  w,  v,  s, -s, -v, -w, -t, -u, -r,
+                         -r, -u, -t, -w, -v, -s,  s,  v,  w,  t,  u,  r])
+    y_nodes = array([ 0,  s,  v,  w,  t,  u,  r,  r,  u,  t,  w,  v,  s,
+                         -s, -v, -w, -t, -u, -r, -r, -u, -t, -w, -v, -s])
+    weights = array([B0, B1, B2, B3, B3, B2, B1, B1, B2, B3, B3, B2, B1,
+                         B1, B2, B3, B3, B2, B1, B1, B2, B3, B3, B2, B1])
+    
+    return (x_nodes, y_nodes), weights
+
+def chanut_25pt2():
+    '''
+    Chanut's second 25-point rule (Stroud C2: 9-3):
+    
+    A ninth-order rule with 25 points.
+    
+    Chanut, A., "Calcul numérique des integrales doubles",
+    C. R. Acad. Sci. Paris, v. 256, 1963, pp. 3239-3241.
+    '''
+    r = 0.9477024551
+    s = 0.7049610584
+    t = 0.8664350908
+    u = 0.5607932266
+    v = 0.4136613878
+    w = 0.08752771858
+    B0 = 0.5267489717
+    B1 = 0.09728367154
+    B2 = 0.2121324628
+    B3 = 0.1247402442
+    
+    x_nodes = array([ 0,  r,  u,  t,  w,  v,  s, -s, -v, -w, -t, -u, -r,
+                         -r, -u, -t, -w, -v, -s,  s,  v,  w,  t,  u,  r])
+    y_nodes = array([ 0,  s,  v,  w,  t,  u,  r,  r,  u,  t,  w,  v,  s,
+                         -s, -v, -w, -t, -u, -r, -r, -u, -t, -w, -v, -s])
+    weights = array([B0, B1, B2, B3, B3, B2, B1, B1, B2, B3, B3, B2, B1,
+                         B1, B2, B3, B3, B2, B1, B1, B2, B3, B3, B2, B1])
+    
+    return (x_nodes, y_nodes), weights
 
 def rr_25pt():
     '''
