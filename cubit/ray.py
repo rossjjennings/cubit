@@ -40,7 +40,7 @@ def exponential(n, scale=1):
     
     return nodes, weights
 
-def gamma(n, alpha, scale=1)
+def gamma(n, alpha, scale=1):
     '''
     Generalized Gauss-Laguerre quadrature:
     
