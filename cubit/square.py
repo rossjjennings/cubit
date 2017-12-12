@@ -136,7 +136,7 @@ def radon_7pt():
     by Radon for other regions, and are also the common zeros of triples of
     orthogonal polynomials.
     
-    Radon, J., "Zur mechaniste Kubatur",
+    Radon, J., "Zur mechanischen Kubatur",
     Monatsh. Math., v. 52, 1948, pp. 286-300.
     '''
     r = sqrt(3/5)
