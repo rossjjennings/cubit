@@ -1,13 +1,14 @@
 import numpy as np
 from numpy.polynomial import legendre, chebyshev
+from scipy import linalg, special
 
 def gauss(n, lower=-1, upper=1):
     '''
-    Gaussian quadrature. This function aliases `leggauss`.
+    Gaussian quadrature. This function aliases `gauss_legendre`.
     '''
     return leggauss(n, lower, upper)
 
-def leggauss(n, lower=-1, upper=1):
+def gauss_legendre(n, lower=-1, upper=1):
     '''
     Gauss-Legendre quadrature:
     
@@ -20,11 +21,11 @@ def leggauss(n, lower=-1, upper=1):
         weights = (upper-lower)/2*weights
     return nodes, weights
 
-def chebgauss(n, lower=-1, upper=1):
+def gauss_chebyshev(n, lower=-1, upper=1):
     '''
     Gauss-Chebyshev quadrature:
     
-    A rule of order 2*n-1 on the interval [lower, upper]
+    A rule of order 2*n-1 on the interval [-1, 1]
     with respect to the weight function w(x) = 1/sqrt(1-x**2).
     '''
     nodes, weights = chebyshev.chebgauss(n)
@@ -32,6 +33,78 @@ def chebgauss(n, lower=-1, upper=1):
         nodes = (upper+lower)/2 + (upper-lower)/2*nodes
         weights = (upper-lower)/2*weights
     return nodes, weights
+
+def gauss_gegenbauer(n, alpha, lower=-1, upper=1):
+    '''
+    Gauss-Gegenbauer quadrature:
+    
+    A rule of order 2*n-1 on the interval [-1, 1] with respect to
+    the weight function w(x) = (1-x**2)**(alpha-1/2).
+    '''
+    k = np.arange(1, n)
+    J_bands = np.zeros((2, n))
+    J_bands[0,1:] = k*(k + 2*alpha - 1)
+    J_bands[0,1:] /= 4*(k + alpha - 1/2)**2 - 1
+    J_bands[0,1:] = sqrt(J_bands[0,1:])
+    
+    nodes, vectors = linalg.eig_banded(J_bands)
+    weights = vectors[0,:]**2
+    weights *= sqrt(pi)*special.gamma(alpha + 1/2)
+    weights /= special.gamma(alpha + 1)
+    
+    if lower != -1 or upper != 1:
+        nodes = (upper+lower)/2 + (upper-lower)/2*nodes
+        weights = (upper-lower)/2*weights
+    
+    return nodes, weights
+
+def gauss_jacobi(n, alpha, beta, lower=-1, upper=1):
+    '''
+    Gauss-Jacobi quadrature:
+    
+    A rule of order 2*n-1 on the interval [-1, 1] with respect to
+    the weight function w(x) = (1-x)**alpha*(1+x)**beta.
+    '''
+    k = np.arange(1, n + 1)
+    J_bands = np.zeros((2, n))
+    J_bands[0,1:] = (k*(k + alpha)*(k + beta)*(k + alpha + beta))[:-1]
+    J_bands[0,1:] /= ((2*k + alpha + beta)**2 - 1)[:-1]
+    J_bands[0,1:] = sqrt(J_bands[0,1:])
+    J_bands[0,1:] *= (2/(2*k + alpha + beta))[:-1]
+    J_bands[1,:] = (beta**2 - alpha**2)
+    J_bands[1,:] /= (2*k + alpha + beta)*(2*k + alpha + beta - 2)
+    nodes, vectors = linalg.eig_banded(J_bands) 
+    weights = vectors[0,:]**2
+    weights *= 2**(alpha + beta + 1)*special.beta(alpha + 1, beta + 1)
+    
+    if lower != -1 or upper != 1:
+        nodes = (upper+lower)/2 + (upper-lower)/2*nodes
+        weights = (upper-lower)/2*weights
+    
+    return nodes, weights
+
+def beta(n, alpha, beta):
+    '''
+    Gauss-Jacobi quadrature:
+    
+    A rule of order 2*n-1 on the interval [0, 1] with respect to the PDF of a
+    beta distribution with shape parameters `alpha` and `beta`.
+    '''
+    k = np.arange(1, n + 1)
+    J_bands = np.zeros((2, n))
+    J_bands[0,1:] = (k*(k + alpha - 1)*(k + beta - 1))[:-1]
+    J_bands[0,1:] *= (k + alpha + beta - 2)[:-1]
+    J_bands[0,1:] /= ((2*k + alpha + beta - 2)**2 - 1)[:-1]
+    J_bands[0,1:] = sqrt(J_bands[0,1:])
+    J_bands[0,1:] *= (2/(2*k + alpha + beta - 2))[:-1]
+    J_bands[1,:] = ((beta - 1)**2 - (alpha - 1)**2)
+    J_bands[1,:] /= (2*k + alpha + beta - 2)*(2*k + alpha + beta - 4)
+    nodes, vectors = linalg.eig_banded(J_bands) 
+    weights = vectors[0,:]**2
+    nodes = 1/2*(1 + nodes)
+    
+    return nodes, weights
+    
 
 def trapz(m, lower=-1, upper=1):
     '''
