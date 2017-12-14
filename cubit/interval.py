@@ -43,11 +43,11 @@ def gauss_gegenbauer(n, alpha, lower=-1, upper=1):
     '''
     k = np.arange(1, n)
     J_bands = np.zeros((2, n))
-    J_bands[0,1:] = k*(k + 2*alpha - 1)
-    J_bands[0,1:] /= 4*(k + alpha - 1/2)**2 - 1
-    J_bands[0,1:] = sqrt(J_bands[0,1:])
+    J_bands[1,:-1] = k*(k + 2*alpha - 1)
+    J_bands[1,:-1] /= 4*(k + alpha - 1/2)**2 - 1
+    J_bands[1,:-1] = sqrt(J_bands[0,1:])
     
-    nodes, vectors = linalg.eig_banded(J_bands)
+    nodes, vectors = linalg.eig_banded(J_bands, lower=True)
     weights = vectors[0,:]**2
     weights *= sqrt(pi)*special.gamma(alpha + 1/2)
     weights /= special.gamma(alpha + 1)
@@ -67,13 +67,13 @@ def gauss_jacobi(n, alpha, beta, lower=-1, upper=1):
     '''
     k = np.arange(1, n + 1)
     J_bands = np.zeros((2, n))
-    J_bands[0,1:] = (k*(k + alpha)*(k + beta)*(k + alpha + beta))[:-1]
-    J_bands[0,1:] /= ((2*k + alpha + beta)**2 - 1)[:-1]
-    J_bands[0,1:] = sqrt(J_bands[0,1:])
-    J_bands[0,1:] *= (2/(2*k + alpha + beta))[:-1]
-    J_bands[1,:] = (beta**2 - alpha**2)
-    J_bands[1,:] /= (2*k + alpha + beta)*(2*k + alpha + beta - 2)
-    nodes, vectors = linalg.eig_banded(J_bands) 
+    J_bands[0,:] = (beta**2 - alpha**2)
+    J_bands[0,:] /= (2*k + alpha + beta)*(2*k + alpha + beta - 2)
+    J_bands[1,:-1] = (k*(k + alpha)*(k + beta)*(k + alpha + beta))[:-1]
+    J_bands[1,:-1] /= ((2*k + alpha + beta)**2 - 1)[:-1]
+    J_bands[1,:-1] = sqrt(J_bands[0,1:])
+    J_bands[1,:-1] *= (2/(2*k + alpha + beta))[:-1]
+    nodes, vectors = linalg.eig_banded(J_bands, lower=True) 
     weights = vectors[0,:]**2
     weights *= 2**(alpha + beta + 1)*special.beta(alpha + 1, beta + 1)
     

@@ -21,9 +21,9 @@ def gauss_genlaguerre(n, alpha):
     '''
     k = np.arange(1, n+1)
     J_bands = np.zeros((2, n))
-    J_bands[0,1:] = -sqrt(k*(k + alpha))[:-1]
-    J_bands[1,:] = 2*k + alpha - 1
-    nodes, vectors = linalg.eig_banded(J_bands)
+    J_bands[0,:] = 2*k + alpha - 1
+    J_bands[1,:-1] = -sqrt(k*(k + alpha))[:-1]
+    nodes, vectors = linalg.eig_banded(J_bands, lower=True)
     weights = special.gamma(alpha + 1)*vectors[0,:]**2
     
     return nodes, weights
