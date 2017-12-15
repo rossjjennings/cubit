@@ -1,6 +1,48 @@
 import numpy as np
 from numpy import pi, sin, cos, exp, log, sqrt
-from cubit import line
+from scipy import special
+from cubit import line, ray
+
+def sphprod_gauss(n):
+    '''
+    Spherical product Gauss rule:
+    
+    A rule of order 2*n-1 making use of the separation of variables in
+    polar coordinates. If n is even, it uses n**2 points, lying on n/2
+    regular 2n-gons; if n is odd, it uses n**2 - n + 1 points, with
+    n*(n-1) of them lying on (n-1)/2 regular 2n-gons and one lying at
+    the origin. 
+    '''
+    theta = np.linspace(-(1-1/(2*n))*pi, (1-1/(2*n))*pi, 2*n)
+    theta_weights = np.full(2*n, pi/n)
+    
+    if n % 2 == 1:
+        rsquared = ray.gauss_genlaguerre(n//2, 1)[0]
+        r = sqrt(rsquared)
+        even_orders = np.arange(0,(n+1)//2)
+        rsquared = np.concatenate((np.zeros(1), rsquared))
+        rsquared = rsquared[:,np.newaxis]
+        evens = special.eval_laguerre(even_orders, rsquared)**2
+        evens = np.sum(evens, axis = 1)
+        odd_orders = np.arange(0,(n-1)//2)
+        odds = special.eval_genlaguerre(odd_orders, 1, rsquared)**2
+        odds = np.sum(rsquared/(odd_orders + 1)*odds, axis = 1)
+        r_weights = 1/(evensum + oddsum)
+        x_nodes = np.tile(r, 2*n)*np.repeat(cos(theta), n//2))
+        x_nodes = np.concatenate((np.zeros(1), x_nodes)
+        y_nodes = np.tile(r, 2*n)*np.repeat(sin(theta), n//2))
+        y_nodes = np.concatenate((np.zeros(1), y_nodes)
+        weights = np.tile(r_weights[1:], 2*n)*np.repeat(theta_weights, n//2))
+        weights = np.concatenate((pi*r_weights[0:1], weights)
+    else:
+        rsquared, rsquared_weights = ray.gauss_laguerre(n//2)
+        r = sqrt(rsquared)
+        r_weights = rsquared_weights/2
+        x_nodes = np.tile(r, 2*n)*np.repeat(cos(theta), n//2)
+        y_nodes = np.tile(r, 2*n)*np.repeat(sin(theta), n//2)
+        weights = np.tile(r_weights, 2*n)*np.repeat(theta_weights, n//2)
+    
+    return (x_nodes, y_nodes), weights
 
 def prod_hermgauss(n1, n2):
     '''
