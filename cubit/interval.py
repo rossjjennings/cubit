@@ -219,7 +219,7 @@ def composite_gauss(m, n, lower=-1, upper=1):
     on each subinterval. The total number of evaluation points is n*m.
     '''
     h = (upper-lower)/m
-    subinterval_nodes, subinterval_weights = leggauss(n)
+    subinterval_nodes, subinterval_weights = gauss_legendre(n)
     nodes = (h/2*np.tile(subinterval_nodes, m)
              + np.repeat(np.linspace(lower + h/2, upper - h/2, m), n))
     weights = np.tile(subinterval_weights*h/2, m)
