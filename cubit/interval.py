@@ -6,7 +6,7 @@ def gauss(n, lower=-1, upper=1):
     '''
     Gaussian quadrature. This function aliases `gauss_legendre`.
     '''
-    return leggauss(n, lower, upper)
+    return gauss_legendre(n, lower, upper)
 
 def gauss_legendre(n, lower=-1, upper=1):
     '''
