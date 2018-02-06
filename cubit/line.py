@@ -1,5 +1,5 @@
 import numpy as np
-from numpy.polynomial import hermite, hermite_e
+from scipy import special
 
 def gauss_hermite(n):
     '''
@@ -8,7 +8,7 @@ def gauss_hermite(n):
     A rule of order 2*n-1 on the line with respect to
     the weight function w(x) = exp(-x**2).
     '''
-    return hermite.hermgauss(n)
+    return special.roots_hermite(n)
 
 def gauss_hermite_e(n):
     '''
@@ -17,7 +17,7 @@ def gauss_hermite_e(n):
     A rule of order 2*n-1 on the line with respect to
     the weight function w(x) = exp(-x**2/2).
     '''
-    return hermite_e.hermegauss(n)
+    return special.roots_hermitenorm(n)
 
 def normal(n, loc=0, scale=1):
     '''
@@ -26,7 +26,7 @@ def normal(n, loc=0, scale=1):
     A rule of order 2*n-1 on the line with respect to the PDF of a
     normal distribution with arbitrary location and scale.
     '''
-    nodes, weights = hermite_e.hermegauss(n)
+    nodes, weights = special.roots_hermitenorm(n)
     nodes = loc + scale*nodes
     weights = weights/np.sqrt(2*np.pi)
     return nodes, weights
