@@ -41,7 +41,7 @@ def gauss_gegenbauer(n, alpha):
     z = mp.eye(n)[0,:]
     
     tridiag_eigen(mp, d, e, z)
-    z = 2*z.apply(lambda x: x**2)
+    z = 2**(2*alpha)*mp.beta(alpha + 1/2, alpha + 1/2)*z.apply(lambda x: x**2)
     return d, z.T
 
 def gauss_jacobi(n, alpha, beta):
