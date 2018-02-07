@@ -56,4 +56,4 @@ def gauss_jacobi(n, alpha, beta):
     
     tridiag_eigen(mp, d, e, z)
     z = 2**(alpha + beta + 1)*mp.beta(alpha + 1, beta + 1)*z.apply(lambda x: x**2)
-    return d, z.T.apply(lambda x: x**2)
+    return d, z.T
