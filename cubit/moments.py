@@ -1,5 +1,7 @@
 import sympy as sym
 
+x = sym.Symbol('x')
+
 def inner(p1, p2, momfunc):
     prod = sym.Poly(p1*p2, x)
     iter = enumerate(reversed(prod.all_coeffs()))
