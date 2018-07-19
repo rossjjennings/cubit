@@ -120,8 +120,9 @@ def double_octagon():
     '''
     Double octagon rule (Stroud S2: 7-2):
     
-    A seventh-order rule with 16 points at the vertices of two nested octagons.
-    All weights are equal. This is also a spherical product Gauss rule.
+    A seventh-degree rule with 16 points at the vertices of two nested octagons.
+    All weights are equal. This is also a spherical product Gauss rule. This
+    version is rotated by π/8 compared to the version in Stroud.
     '''
     r = sqrt((3-sqrt(3))/6)
     s = sqrt((3+sqrt(3))/6)
@@ -137,7 +138,34 @@ def double_octagon():
     return (x_nodes, y_nodes), pi*weights
 
 def albrecht_19pt():
-    pass
+    '''
+    Albrecht's nineteen-point rule (Stroud S2: 9-1):
+    
+    A ninth-degree rule with 19 points and order-6 rotational symmetry.
+    
+    Albrecht, J., "Formeln zur numerischen Integration uber Kreisbereiche",
+    Z. Agnew. Math. Mech., v. 40, 1960, pp. 514-517. MR 22#11514.
+    '''
+    r1 = sqrt((96-4*sqrt(111))/155)
+    r2 = sqrt((96+4*sqrt(111))/155)
+    r3 = sqrt(4/5)
+    s = sqrt(3)/2
+    B0 = 251/2304
+    B1 = (110297+5713*sqrt(111))/2045952
+    B2 = (110297-5713*sqrt(111))/2045952
+    C = 125/3072
+    
+    x_nodes = np.array([ 0,  r1,  r1/2, -r1/2,   -r1, -r1/2,  r1/2,
+                             r2,  r2/2, -r2/2,   -r2, -r2/2,  r2/2,
+                           r3*s,     0, -r3*s, -r3*s,     0,  r3*s])
+    y_nodes = np.array([ 0,   0,  r1*s,  r1*s,     0, -r1*s, -r1*s,
+                              0,  r2*s,  r2*s,     0, -r2*s, -r2*s,
+                           r3/2,    r3,  r3/2, -r3/2,   -r3, -r3/2])
+    weights = np.array([B0,  B1,    B1,    B1,    B1,    B1,    B1,
+                             B2,    B2,    B2,    B2,    B2,    B2,
+                              C,     C,     C,     C,     C,     C])
+    
+    return (x_nodes, y_nodes), pi*weights
 
 def rr_20pt():
     pass
